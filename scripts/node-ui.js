@@ -114,7 +114,6 @@ class Node {
 function onMouseDownCircle(e, id, index, io) {
   e.stopPropagation();
   const wire = wires.find((v) => hasWire(v, id, io, index));
-  console.log(wire, id, index, io);
   if (wire) {
     document.getElementById(wire.id)?.remove();
     wires = wires.filter((v) => !hasWire(v, id, io, index));

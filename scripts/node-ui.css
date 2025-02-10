@@ -74,7 +74,7 @@ div.node .circle.connected {
   background-color: var(--main-color);
 }
 div.node-output {
-  height: 40px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
