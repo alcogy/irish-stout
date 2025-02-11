@@ -56,6 +56,16 @@ div.node-inputs .item {
   align-items: center;
   gap: 8px;
 }
+div.node-inputs .item .io-label,
+div.node-outputs .node-output .io-label {
+  background-color: transparent;
+  color: #eee;
+  border: 0;
+  outline: none;
+}
+div.node-outputs .node-output .io-label {
+  text-align: right;
+}
 div.node .circle {
   border: 0;
   background-color: var(--accent-color);

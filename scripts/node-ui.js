@@ -80,9 +80,9 @@ class Node {
 
   #makeIO(id, str, index, io) {
     // Label
-    const label = document.createElement('span');
-    label.classList.add('label');
-    label.innerText = str;
+    const label = document.createElement('input');
+    label.classList.add('io-label');
+    label.value = str;
   
     // Circle
     const circle = document.createElement('button');
@@ -188,7 +188,7 @@ function onMouseLeaveCircle(e) {
 
 const nodeHeaderHeight = 40;
 const nodeIOHeight = 36; 
-
+const headerHeight = 104;
 const mouse = {
   x: 0,
   y: 0,
@@ -196,24 +196,22 @@ const mouse = {
 
 let selectedNode = '';
 let selectedIO = null;
-let index = 1;
 let connecting = null;
 let wires = [];
-
-const headerHeight = 104;
-
 const nodes = [];
+
+// Mouse event on Window.
 window.addEventListener('mousemove', onMouseMove);
 window.addEventListener('mouseup', onMouseUp);
 
+// Mouse event on Buttons.
 const addButton = document.getElementById('add-node');
 addButton.addEventListener('click', onClickAddNode);
 
 function onClickAddNode() {
-  const node = new Node('node-'+ index, 10, 20);
+  const node = new Node('node-'+ makeId(), 20, 20);
   nodes.push(node);
   node.render();
-  index += 1;
 }
 
 function onMouseDown(e, id) {
@@ -275,7 +273,7 @@ function drawWire(connecting) {
   const start = connecting.from.node.wirePosition(connecting.from.index, connecting.from.io);
   const end = connecting.to.node.wirePosition(connecting.to.index, connecting.to.io);
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  const id = makeId();
+  const id = 'wire-' + makeId();
   path.id = id;
   path.setAttribute('stroke', 'gray');
   path.setAttribute('fill', 'none');
@@ -297,8 +295,9 @@ function calcWirePath(start, end) {
     x: (end.x + start.x) / 2,
     y: (end.y + start.y) / 2,
   }
-  return `M ${start.x} ${start.y + 3} Q ${(center.x + start.x) / 2 + 20} ${start.y}, ${center.x} ${center.y} T${end.x} ${end.y}`;
+  return `M ${start.x} ${start.y} Q ${(center.x + start.x) / 2} ${start.y}, ${center.x} ${center.y} T${end.x} ${end.y}`;
 }
+
 
 function makeId() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -311,8 +310,6 @@ function makeId() {
   for (let i = 0; i < 8; i++) {
     result += characters2.charAt(Math.floor(Math.random() * characters.length));
   }
-  
-  if (wires.includes(result)) return makeId();
-
+    
   return result;
 }
