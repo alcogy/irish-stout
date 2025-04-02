@@ -1,6 +1,3 @@
-# IrishStout
-Irish Stout is a Node-style UI library.
+# Irish Stout
+Irish Stout is a DOM + SVG based Node-style UI library.
 
-Build by JavaScript. (vanilla JS)
-
-![Irish Stout main UI](readme/mainui.png)

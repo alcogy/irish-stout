@@ -42,7 +42,7 @@ div.sub-menu {
   border-bottom: 1px solid #333;
 }
 
-button.btnAdd {
+button.btn-add {
   border: 0;
   background-color: #222;
   color: #ddd;
@@ -50,6 +50,9 @@ button.btnAdd {
   border-radius: 4px;
   cursor: pointer;
 }
-button.btnAdd:hover {
+button.btn-add:hover {
   opacity: 0.8;
+}
+#root {
+  height: calc(100vh - 104px);
 }

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Irish Stout :: Node-style UI</title>
   <link rel="stylesheet" href="style.css" type="text/css">
-  <link rel="stylesheet" href="scripts/node-ui.css" type="text/css">
 </head>
 <body>
   <header class="global-header">
@@ -13,10 +12,12 @@
   </header>
 
   <div class="sub-menu">
-    <button class="btnAdd" id="add-node">Add Node</button>
+    <button class="btn-add" id="add-node">Add Node</button>
   </div>
 
-  <div id="f-root" class="function-editor"></div>
-  <script src="scripts/node-ui.js" type="module"></script>
+  <div id="root"></div>
+  <script src="../src/irish-stout.js"></script>
+  <link rel="stylesheet" type="text/css" href="../src/irish-stout.css">
+  <script src="./script.js"></script>
 </body>
 </html>
