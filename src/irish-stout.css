@@ -95,3 +95,24 @@
   top: 0;
   z-index: 0;
 }
+
+.irish-stout div.node-textbox {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+.irish-stout div.node-textbox input {
+  border: 1px solid #555;
+  background-color: #222;
+  padding: 4px 8px;
+  height: 100%;
+  color: #ddd;
+  border-radius: 4px;
+}
+
+.irish-stout div.output-text {
+  margin: 8px;
+  word-wrap: break-word;
+}

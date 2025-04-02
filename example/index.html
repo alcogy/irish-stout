@@ -12,12 +12,16 @@
   </header>
 
   <div class="sub-menu">
+    <select id="node-type" class="type-selector">
+      <option value="textbox">Textbox</option>
+      <option value="display">Display</option>
+      <option value="condition">Condition</option>
+    </select>
     <button class="btn-add" id="add-node">Add Node</button>
   </div>
 
   <div id="root"></div>
-  <script src="../src/irish-stout.js"></script>
   <link rel="stylesheet" type="text/css" href="../src/irish-stout.css">
-  <script src="./script.js"></script>
+  <script src="./script.js" type="module"></script>
 </body>
 </html>
