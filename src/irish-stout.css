@@ -3,6 +3,9 @@
   box-sizing: border-box;
 }
 
+/********************
+*       base 
+*********************/
 .irish-stout {
   width: 100%;
   height: 100%;
@@ -12,6 +15,9 @@
   user-select: none;
 }
 
+/********************
+*       node 
+*********************/
 .irish-stout div.node {
   background-color: #303030;
   width: 200px;
@@ -49,52 +55,6 @@
   align-items: center;
   gap: 8px;
 }
-.irish-stout div.node-inputs .item .io-label,
-.irish-stout div.node-outputs .node-output .io-label {
-  background-color: transparent;
-  color: #eee;
-  border: 0;
-  outline: none;
-}
-.irish-stout div.node-outputs .node-output .io-label {
-  text-align: right;
-}
-.irish-stout div.node .circle {
-  border: 0;
-  background-color: var(--accent-color);
-  width: 14px;
-  height: 14px;
-  padding: 0;
-  margin: 2px;
-  border-radius: 9999px;
-}
-.irish-stout div.node .circle:hover,
-.irish-stout div.node .circle.active {
-  background-color: var(--accent-color);
-  opacity: 0.8;
-}
-.irish-stout div.node .circle.connected {
-  background-color: var(--main-color);
-}
-.irish-stout div.node-output {
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  border-bottom: var(--main-border);
-  gap: 8px;
-}
-.irish-stout div.node-output:last-of-type {
-  border: 0;
-}
-.irish-stout svg {
-  min-width: 100%;
-  min-height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 0;
-}
 
 .irish-stout div.node-textbox {
   height: 40px;
@@ -115,4 +75,55 @@
 .irish-stout div.output-text {
   margin: 8px;
   word-wrap: break-word;
+}
+
+
+/********************
+*       IO 
+*********************/
+.irish-stout div.node-ios {
+  padding: 0 2px;
+}
+.irish-stout div.io {
+  display: flex;
+  align-items: center;
+  padding: 8px 2px;
+  gap: 4px;
+}
+
+.irish-stout div.io .io-body {
+  flex: 1;
+  padding: 0 4px;
+}
+.irish-stout div.io .io-body.output {
+  text-align: right;
+}
+.irish-stout div.node .circle {
+  border: 0;
+  background-color: var(--accent-color);
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 9999px;
+}
+.irish-stout div.node .circle:hover,
+.irish-stout div.node .circle.active {
+  background-color: var(--accent-color);
+  opacity: 0.8;
+}
+.irish-stout div.node .circle.connected {
+  background-color: var(--main-color);
+}
+
+
+/********************
+*       Edge 
+*********************/
+.irish-stout svg {
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
 }
