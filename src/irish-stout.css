@@ -95,8 +95,24 @@
   flex: 1;
   padding: 0 4px;
 }
-.irish-stout div.io .io-body.output {
+.irish-stout div.io .io-body .right {
   text-align: right;
+}
+.irish-stout div.io .io-body input {
+  border: 1px solid #555;
+  background-color: #222;
+  padding: 4px 8px;
+  height: 100%;
+  width: 100%;
+  color: #ddd;
+  border-radius: 4px;
+}
+.irish-stout div.io .io-body input[type=number]::-webkit-inner-spin-button {
+  appearance: none; 
+}
+.irish-stout div.node.selected {
+  outline: 2px solid #ba993a;
+  z-index: 100 !important;
 }
 .irish-stout div.node .circle {
   border: 0;

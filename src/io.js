@@ -3,13 +3,13 @@ import { Connecting } from './edge.js';
 
 export default class IO {
   
-  constructor(nodeId, type, body) {
-    body.classList.add('io-body');
+  constructor(nodeId, type, body, fn) {
     this.id = makeId();
     this.nodeId = nodeId;
     this.type = type;
     this.body = body;
     this.gate = null;
+    this.fn = fn;
   }
 
   render() {
@@ -29,14 +29,22 @@ export default class IO {
 
     if (this.type === 'input') {
       io.appendChild(circle);
-      io.appendChild(this.body);
-    } else if (this.type === 'output') {
-      this.body.classList.add('output');
-      io.appendChild(this.body);
+    }
+
+    const wrap = document.createElement('div');
+    wrap.classList.add('io-body');
+    wrap.appendChild(this.body);
+    io.appendChild(wrap);
+
+    if (this.type === 'output') {
       io.appendChild(circle);
     }
 
     return io
+  }
+
+  update(v) {
+    this.fn && this.fn(v);
   }
 
   #onMouseDownCircle(e, circle) {

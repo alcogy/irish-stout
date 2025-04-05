@@ -1,6 +1,6 @@
-import { makeId, States } from './utils.js';
+import { States } from './utils.js';
 import { Edge } from './edge.js';
-import { NodeTextBox, NodeDisplay, NodeCondition } from './node.js';
+import { NodeTextBox, NodeDisplay, NodeCondition, NodeNumberBox } from './buildin-nodes.js';
 
 export default class IrishStout {
   constructor(container) {
@@ -13,6 +13,7 @@ export default class IrishStout {
     
     window.addEventListener('mousemove', (e) => this.#onMouseMove(e));
     window.addEventListener('mouseup', (e) => this.#onMouseUp(e));
+    window.addEventListener('keyup', (e) => this.#onKeyUp(e));
   }
 
   addNode(type) {
@@ -21,14 +22,27 @@ export default class IrishStout {
     this.mount(node.render());
   }
 
+  action() {
+    let result;
+    for (const node of this.nodes) {
+      result = node.action(result);
+    }
+
+    for (const edge of this.edges) {
+      edge.move();
+    }
+  }
+
   #selectNode(type) {
     switch(type) {
       case 'textbox':
-        return new NodeTextBox(makeId());
+        return new NodeTextBox();
       case 'display':
-        return new NodeDisplay(makeId());
+        return new NodeDisplay();
+      case 'number':
+        return new NodeNumberBox();
       case 'condition':
-        return new NodeCondition(makeId());
+        return new NodeCondition();
     }
   }
 
@@ -63,12 +77,7 @@ export default class IrishStout {
 
   #onMouseUp() {
     if (States.connecting) {
-      if (States.selectedIO.from && States.selectedIO.to) {
-        const edge = new Edge(States.selectedIO.from, States.selectedIO.to);
-        this.edges.push(edge);
-        const svg = edge.render();
-        States.container.appendChild(svg);
-      }
+      this.#connect();
       document.getElementById('drawing')?.remove();
     }
     
@@ -78,6 +87,32 @@ export default class IrishStout {
       from: null,
       to: null,
     }
+  }
+
+  #onKeyUp(e) {
+    switch (e.key) {
+      case 'Delete':
+        States.selectedNode.remove();
+        this.nodes = this.nodes.filter((v) => v.id !== States.selectedNode.id);
+        // TODO Edge;
+        for (const edge of this.edges) {
+          if (edge.includeNode(States.selectedNode.id)) {
+            edge.remove();
+          }
+        }
+        this.edges = this.edges.filter((v) => !v.includeNode(States.selectedNode.id));
+        States.selectedNode = null;
+        break;
+    }
+  }
+
+  #connect() {
+    if (States.selectedIO.from === null || States.selectedIO.to === null) return;
+    const edge = new Edge(States.selectedIO.from, States.selectedIO.to);
+    this.edges.push(edge);
+    const svg = edge.render();
+    States.container.appendChild(svg);
+    
   }
   
 }

@@ -1,13 +1,14 @@
 import { makeId, States } from './utils.js';
 import IO from './io.js';
-class Node {
-  constructor(id) {
-    this.id = id;
+export default class Node {
+  constructor(fn) {
+    this.id = makeId();
     this.left = 30;
     this.top = 30;
     this.zIndex = 1;
     this.element = null;
     this.ios = [];
+    this.fn = fn;
   }
 
   setLabel(v) {
@@ -23,13 +24,29 @@ class Node {
 
   render() {
     // Node wrap
-    const node = this.makeNodeBase();
+    const node = this.#makeNodeBase();
+    const nodeIOs = this.#makeNodeIOConainer();
     
+    const ios = this.makeIOs();
+    for (const io of ios) {
+      this.ios.push(io.gate);
+      nodeIOs.appendChild(io.render());
+    }
+    node.appendChild(nodeIOs);
+
     this.element = node;
     return node;
   }
 
-  makeNodeBase() {
+  makeIOs() {
+    const body = document.createElement('div');
+    
+    body.innerText = 'Hello Guinness!';
+    const io = new IO(this.id, 'output', body, 'Hello Guinness!');
+    return [io];
+  }
+
+  #makeNodeBase() {
     // node base.
     const node = document.createElement('div');
     node.id = this.id;
@@ -54,101 +71,32 @@ class Node {
 
     return node;
   }
-  makeNodeIOConainer() {
+
+  #makeNodeIOConainer() {
     const nodeIOs = document.createElement('div');
     nodeIOs.classList.add('node-ios');
     return nodeIOs;
   }
 
-  update(...v) {}
+  action(v) {
+    return fn(v);
+  }
 
   onMouseDown(e) {
     States.holdingNode = this;
-    States.selectNode = this;
+    States.selectedNode = this;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
+    const selected = document.querySelectorAll('div.node.selected');
+    for (const sel of selected) {
+      sel.classList.remove('selected');
+    }
+    this.element.classList.add('selected');
   }
   
-}
-
-export class NodeTextBox extends Node {
-  constructor(id) {
-    super(id);
-    this.label = 'My Text';
-  }
-
-  render() {
-    const node = super.makeNodeBase();
-    const nodeIOs = super.makeNodeIOConainer();
-    
-    // IO
-    const body = document.createElement('div');
-    body.innerText = 'Hello Guinness!';
-    const io = new IO(this.id, 'output', body);
-    this.ios.push(io.gate);
-    
-    nodeIOs.appendChild(io.render());
-    node.appendChild(nodeIOs);
-
-    this.element = node;
-    return node;
+  remove() {
+    this.element.remove();
   }
 
 }
 
-export class NodeDisplay extends Node {
-  constructor(id) {
-    super(id);
-    this.label = 'display';
-    this.value = '';
-  }
-
-  render() {
-    const node = super.makeNodeBase();
-    const nodeIOs = super.makeNodeIOConainer();
-    
-    // IO
-    const body = document.createElement('div');
-    body.innerText = this.value;
-    const io = new IO(this.id, 'input', body);
-    this.ios.push(io.gate);
-
-    nodeIOs.appendChild(io.render());
-    node.appendChild(nodeIOs);
-
-    this.element = node;
-    return node;
-  }
-
-  update(value) {
-    this.output.innerText = value;
-  }
-}
-
-export class NodeCondition extends Node {
-  constructor(id) {
-    super(id);
-    this.label = 'condition';
-    this.value = '';
-  }
- 
-  render() {
-    const node = super.makeNodeBase();
-    const nodeIOs = super.makeNodeIOConainer();
-    
-    // IO
-    for (const label of ['input1', 'input2', 'True', 'False']) {
-      const body = document.createElement('div');
-      body.innerText = label;
-      const io = new IO(this.id, label.indexOf('input') >= 0 ? 'input' : 'output', body);
-      this.ios.push(io.gate);
-      nodeIOs.appendChild(io.render());
-    }
-
-    node.appendChild(nodeIOs);
-
-    this.element = node;
-    return node;
-  }
-
-}

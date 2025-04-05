@@ -35,6 +35,7 @@ export class Connecting {
     }
     return `M ${start.left} ${start.top} Q ${(center.left + start.left) / 2} ${start.top}, ${center.left} ${center.top} T ${end.left} ${end.top}`;
   }
+
 }
 
 
@@ -44,6 +45,7 @@ export class Edge {
     this.from = from;
     this.to = to;
     this.path = null;
+    this.element = null;
   }
 
   render() {
@@ -57,12 +59,17 @@ export class Edge {
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.appendChild(path);
+    this.element = svg;
 
     return svg;
   }
 
   move() {
     this.path.setAttribute('d', this.#calcWirePath());
+  }
+
+  remove() {
+    this.element.remove();
   }
 
   includeNode(nodeId) {
