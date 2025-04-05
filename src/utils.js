@@ -15,6 +15,8 @@ export const States = {
     x: 0,
     y: 0
   },
+  nodes: [],
+  edges: [],
 }
 
 export function makeId() {

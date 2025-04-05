@@ -1,14 +1,29 @@
 import { makeId, States } from './utils.js';
-import IO from './io.js';
+import { Output } from './io.js';
 export default class Node {
-  constructor(fn) {
+  constructor() {
     this.id = makeId();
     this.left = 30;
     this.top = 30;
-    this.zIndex = 1;
     this.element = null;
     this.ios = [];
-    this.fn = fn;
+    // ...add your props.
+    this.output = null;
+  }
+
+  // abstruct for render body(io).
+  makeIOs() {
+    const body = document.createElement('div');
+    body.value = 'Hello Guinness!';
+    const io = new Output(this.id, 'output', body, 'Hello Guinness!');
+
+    // return must array for up to down.
+    return [io];
+  }
+
+  // abstruct for execute function.
+  action() {
+    // Do something.
   }
 
   setLabel(v) {
@@ -27,9 +42,8 @@ export default class Node {
     const node = this.#makeNodeBase();
     const nodeIOs = this.#makeNodeIOConainer();
     
-    const ios = this.makeIOs();
-    for (const io of ios) {
-      this.ios.push(io.gate);
+    this.ios = this.makeIOs();
+    for (const io of this.ios) {
       nodeIOs.appendChild(io.render());
     }
     node.appendChild(nodeIOs);
@@ -38,21 +52,10 @@ export default class Node {
     return node;
   }
 
-  makeIOs() {
-    const body = document.createElement('div');
-    
-    body.innerText = 'Hello Guinness!';
-    const io = new IO(this.id, 'output', body, 'Hello Guinness!');
-    return [io];
-  }
-
   #makeNodeBase() {
     // node base.
     const node = document.createElement('div');
     node.id = this.id;
-    node.style.top = this.top + 'px';
-    node.style.left = this.left + 'px';
-    node.style.zIndex = this.zIndex;
     node.classList.add('node');
     node.addEventListener('mousedown', (e) => this.onMouseDown(e));
 
@@ -76,10 +79,6 @@ export default class Node {
     const nodeIOs = document.createElement('div');
     nodeIOs.classList.add('node-ios');
     return nodeIOs;
-  }
-
-  action(v) {
-    return fn(v);
   }
 
   onMouseDown(e) {

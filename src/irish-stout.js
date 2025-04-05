@@ -1,6 +1,6 @@
 import { States } from './utils.js';
 import { Edge } from './edge.js';
-import { NodeTextBox, NodeDisplay, NodeCondition, NodeNumberBox } from './buildin-nodes.js';
+import Network from './network.js';
 
 export default class IrishStout {
   constructor(container) {
@@ -8,46 +8,31 @@ export default class IrishStout {
     States.container.classList.add('irish-stout');
     States.offset.top = States.container.getBoundingClientRect()['top'];
     States.offset.left = States.container.getBoundingClientRect()['left'];
-    this.nodes = [];
-    this.edges = [];
+    this.network = new Network();
     
     window.addEventListener('mousemove', (e) => this.#onMouseMove(e));
     window.addEventListener('mouseup', (e) => this.#onMouseUp(e));
     window.addEventListener('keyup', (e) => this.#onKeyUp(e));
   }
 
-  addNode(type) {
-    const node = this.#selectNode(type);
-    this.nodes.push(node);
+  addNode(node) {
+    States.nodes.push(node);
     this.mount(node.render());
   }
 
   action() {
     let result;
-    for (const node of this.nodes) {
+    for (const node of States.nodes) {
       result = node.action(result);
     }
 
-    for (const edge of this.edges) {
+    for (const edge of States.edges) {
       edge.move();
     }
   }
 
-  #selectNode(type) {
-    switch(type) {
-      case 'textbox':
-        return new NodeTextBox();
-      case 'display':
-        return new NodeDisplay();
-      case 'number':
-        return new NodeNumberBox();
-      case 'condition':
-        return new NodeCondition();
-    }
-  }
-
   removeNode(nodeId) {
-    this.nodes = this.nodes.filter((v) => v.id !== nodeId);
+    States.nodes = States.nodes.filter((v) => v.id !== nodeId);
   }
 
   mount(dom) {
@@ -66,7 +51,7 @@ export default class IrishStout {
       States.mouse.y = e.clientY;
 
       // Moving Edge
-      for (const edge of this.edges) {
+      for (const edge of States.edges) {
         if (edge.includeNode(States.holdingNode.id)) edge.move();
       }
       
@@ -93,14 +78,14 @@ export default class IrishStout {
     switch (e.key) {
       case 'Delete':
         States.selectedNode.remove();
-        this.nodes = this.nodes.filter((v) => v.id !== States.selectedNode.id);
+        States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode.id);
         // TODO Edge;
-        for (const edge of this.edges) {
+        for (const edge of States.edges) {
           if (edge.includeNode(States.selectedNode.id)) {
             edge.remove();
           }
         }
-        this.edges = this.edges.filter((v) => !v.includeNode(States.selectedNode.id));
+        States.edges = States.edges.filter((v) => !v.includeNode(States.selectedNode.id));
         States.selectedNode = null;
         break;
     }
@@ -108,11 +93,22 @@ export default class IrishStout {
 
   #connect() {
     if (States.selectedIO.from === null || States.selectedIO.to === null) return;
+    if (States.selectedIO.from.type === States.selectedIO.to.type) return;
+
+    // Set connecttion on IO.
+    if (States.selectedIO.from.type === 'output') {
+      States.selectedIO.from.setConnect(States.selectedIO.to);
+      States.selectedIO.to.update(States.selectedIO.from.value);
+    } else {
+      States.selectedIO.to.setConnect(States.selectedIO.from);
+      States.selectedIO.from.update(States.selectedIO.to.value);
+    }
+
+    // create edge
     const edge = new Edge(States.selectedIO.from, States.selectedIO.to);
-    this.edges.push(edge);
+    States.edges.push(edge);
     const svg = edge.render();
-    States.container.appendChild(svg);
-    
+    States.container.appendChild(svg);    
   }
   
 }

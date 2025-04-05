@@ -1,6 +1,7 @@
 .irish-stout,
 .irish-stout * {
   box-sizing: border-box;
+  outline: none;
 }
 
 /********************
@@ -10,7 +11,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #505050;
+  background-color: #404040;
   position: relative;
   user-select: none;
 }
@@ -19,7 +20,7 @@
 *       node 
 *********************/
 .irish-stout div.node {
-  background-color: #303030;
+  background-color: #202020;
   width: 200px;
   position: absolute;
   top: 10px;
@@ -72,11 +73,15 @@
   border-radius: 4px;
 }
 
-.irish-stout div.output-text {
-  margin: 8px;
-  word-wrap: break-word;
-}
 
+.irish-stout div.node .node-ios .textbox {
+  border: 1px solid #555;
+  background-color: #222;
+  padding: 4px 8px;
+  height: 100%;
+  color: #ddd;
+  border-radius: 4px;
+}
 
 /********************
 *       IO 
@@ -94,6 +99,7 @@
 .irish-stout div.io .io-body {
   flex: 1;
   padding: 0 4px;
+  word-break: break-all;
 }
 .irish-stout div.io .io-body .right {
   text-align: right;

@@ -1,15 +1,15 @@
 import { makeId, States } from './utils.js';
 import { Connecting } from './edge.js';
 
-export default class IO {
+class IO {
   
-  constructor(nodeId, type, body, fn) {
+  constructor(nodeId, body, value, type) {
     this.id = makeId();
     this.nodeId = nodeId;
-    this.type = type;
     this.body = body;
+    this.type = type;
+    this.value = value;
     this.gate = null;
-    this.fn = fn;
   }
 
   render() {
@@ -23,7 +23,7 @@ export default class IO {
     circle.id = this.id;
     circle.dataset.parentId = this.nodeId;
     circle.addEventListener('mousedown', (e) => this.#onMouseDownCircle(e, circle));
-    circle.addEventListener('mouseenter', this.#onMouseEnterCircle);
+    circle.addEventListener('mouseenter', (e) => this.#onMouseEnterCircle(e));
     circle.addEventListener('mouseleave', this.#onMouseLeaveCircle);
     this.gate = circle;
 
@@ -40,11 +40,11 @@ export default class IO {
       io.appendChild(circle);
     }
 
-    return io
+    return io;
   }
 
   update(v) {
-    this.fn && this.fn(v);
+    this.value = v;
   }
 
   #onMouseDownCircle(e, circle) {
@@ -56,13 +56,13 @@ export default class IO {
       left: rect.left - States.offset.left - (rect.width / 2),
     }
     States.connecting = new Connecting(start);
-    States.selectedIO.from = circle;
+    States.selectedIO.from = this;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
   }
 
   #onMouseEnterCircle(e) {
-    States.selectedIO.to = e.target;  
+    States.selectedIO.to = this;
   }
   
   #onMouseLeaveCircle(e) {
@@ -70,3 +70,38 @@ export default class IO {
   }
 
 }
+
+export class Input extends IO {
+  constructor(nodeId, body, value, notice) {
+    super(nodeId, body, value, 'input');
+    this.notice = notice;
+  }
+
+  update(v) {
+    super.update(v);
+    this.notice && this.notice(this.value);
+  }
+}
+
+export class Output extends IO {
+  constructor(nodeId, body, value, notice) {
+    super(nodeId, body, value, 'output');
+    this.connectTo = null;
+    this.notice = notice;
+  }
+
+  setConnect(io) {
+    this.connectTo = io;
+  }
+
+  update(v) {
+    super.update(v);
+    if (this.connectTo === null) return;
+    this.connectTo.update(this.value);
+    for (const edge of States.edges) {
+      edge.move();
+    }
+  }
+  
+}
+

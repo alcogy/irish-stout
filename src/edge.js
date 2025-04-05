@@ -73,7 +73,7 @@ export class Edge {
   }
 
   includeNode(nodeId) {
-    return nodeId === this.from.dataset.parentId || nodeId === this.to.dataset.parentId;
+    return nodeId === this.from.nodeId || nodeId === this.to.nodeId;
   }
 
   #calcWirePath() {
@@ -86,12 +86,12 @@ export class Edge {
   }
 
   #getPoints() {
-    const fromRect = this.from.getBoundingClientRect();
+    const fromRect = this.from.gate.getBoundingClientRect();
     const start = {
       top: fromRect.top - States.offset.top + (fromRect.height / 2),
       left: fromRect.left - States.offset.left,
     }
-    const endRect = this.to.getBoundingClientRect();
+    const endRect = this.to.gate.getBoundingClientRect();
     const end = {
       top: endRect.top - States.offset.top + (endRect.height / 2),
       left: endRect.left - States.offset.left,
