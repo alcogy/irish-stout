@@ -1,7 +1,8 @@
 import { makeId, States } from './utils.js';
 
 export class Connecting {
-  constructor(from) {
+  constructor(io, from) {
+    this.io = io;
     this.from = from;
     
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");

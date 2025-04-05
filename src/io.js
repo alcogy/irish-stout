@@ -55,7 +55,7 @@ class IO {
       top: rect.top - States.offset.top + (rect.height / 2),
       left: rect.left - States.offset.left - (rect.width / 2),
     }
-    States.connecting = new Connecting(start);
+    States.connecting = new Connecting(this, start);
     States.selectedIO.from = this;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;

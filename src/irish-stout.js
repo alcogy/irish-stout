@@ -56,6 +56,17 @@ export default class IrishStout {
       }
       
     } else if (States.connecting) {
+      // Remove curren connection
+      for (const edge of States.edges) {
+        if (edge.from.id === States.connecting.io.id || edge.to.id === States.connecting.io.id) {
+          if (edge.from.type === 'output') edge.from.setConnect(null);
+          if (edge.to.type === 'output') edge.to.setConnect(null);
+          edge.remove();
+          States.edges = States.edges.filter((v) => v !== edge);
+
+          break;
+        }
+      }
       States.connecting.move(e.clientX, e.clientY);
     }
   }
@@ -94,7 +105,9 @@ export default class IrishStout {
   #connect() {
     if (States.selectedIO.from === null || States.selectedIO.to === null) return;
     if (States.selectedIO.from.type === States.selectedIO.to.type) return;
-
+    for (const edge of States.edges) {
+      if (States.selectedIO.to.id === edge.from.id || States.selectedIO.to.id === edge.to.id ) return;
+    }
     // Set connecttion on IO.
     if (States.selectedIO.from.type === 'output') {
       States.selectedIO.from.setConnect(States.selectedIO.to);
