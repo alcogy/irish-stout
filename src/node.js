@@ -82,6 +82,7 @@ export default class Node {
   }
 
   onMouseDown(e) {
+    e.stopPropagation();
     States.holdingNode = this;
     States.selectedNode = this;
     States.mouse.x = e.clientX;

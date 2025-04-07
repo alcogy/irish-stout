@@ -1,6 +1,42 @@
 import { makeId, States } from './utils.js';
-import { Connecting } from './edge.js';
+class Connecting {
+  constructor(io, from) {
+    this.io = io;
+    this.from = from;
+    
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.id = 'drawing-path';
+    path.setAttribute('stroke', 'lightgray');
+    path.setAttribute('fill', 'transparent');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-dasharray', '2');
+    this.path = path;
 
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = 'drawing';
+    svg.appendChild(path);
+
+    States.container.appendChild(svg);
+  }
+
+  move(x, y) {
+    const end = {
+      top: y - States.offset.top,
+      left: x - States.offset.left,
+    }
+    const path = this.#calcWirePath(this.from, end);
+    this.path.setAttribute('d', path);
+  }
+
+  #calcWirePath(start, end) {
+    const center = {
+      left: (end.left + start.left) / 2,
+      top: (end.top + start.top) / 2,
+    }
+    return `M ${start.left} ${start.top} Q ${(center.left + start.left) / 2} ${start.top}, ${center.left} ${center.top} T ${end.left} ${end.top}`;
+  }
+
+}
 class IO {
   
   constructor(nodeId, body, value, type) {

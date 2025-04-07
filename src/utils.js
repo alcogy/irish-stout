@@ -2,6 +2,7 @@ export const States = {
   container: null,
   selectedNode: null,
   holdingNode: null,
+  isHoldingContainer: false,
   selectedIO: {
     from: null,
     to: null,

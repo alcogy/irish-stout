@@ -1,14 +1,13 @@
 import { States } from './utils.js';
 import { Edge } from './edge.js';
-import Network from './network.js';
 
 export default class IrishStout {
   constructor(container) {
     States.container = document.getElementById(container);
     States.container.classList.add('irish-stout');
+    States.container.addEventListener('mousedown', (e) => this.#onMouseDown(e));
     States.offset.top = States.container.getBoundingClientRect()['top'];
     States.offset.left = States.container.getBoundingClientRect()['left'];
-    this.network = new Network();
     
     window.addEventListener('mousemove', (e) => this.#onMouseMove(e));
     window.addEventListener('mouseup', (e) => this.#onMouseUp(e));
@@ -39,17 +38,20 @@ export default class IrishStout {
     States.container.appendChild(dom);
   }
 
+  #onMouseDown(e) {
+    States.isHoldingContainer = true;
+    States.mouse.x = e.clientX;
+    States.mouse.y = e.clientY;
+  }
+
   #onMouseMove(e) {
+    const diff = {
+      x: e.clientX - States.mouse.x,
+      y: e.clientY - States.mouse.y,
+    }
     if (States.holdingNode) {
       // Moving node
-      const diff = {
-        x: e.clientX - States.mouse.x,
-        y: e.clientY - States.mouse.y,
-      }
       States.holdingNode.move(diff.x, diff.y);
-      States.mouse.x = e.clientX;
-      States.mouse.y = e.clientY;
-
       // Moving Edge
       for (const edge of States.edges) {
         if (edge.includeNode(States.holdingNode.id)) edge.move();
@@ -68,7 +70,13 @@ export default class IrishStout {
         }
       }
       States.connecting.move(e.clientX, e.clientY);
+
+    } else if (States.isHoldingContainer) {
+      this.#move(diff.x, diff.y);
     }
+
+    States.mouse.x = e.clientX;
+    States.mouse.y = e.clientY;
   }
 
   #onMouseUp() {
@@ -79,6 +87,7 @@ export default class IrishStout {
     
     States.holdingNode = null;
     States.connecting = null;
+    States.isHoldingContainer = false;
     States.selectedIO = {
       from: null,
       to: null,
@@ -124,4 +133,15 @@ export default class IrishStout {
     States.container.appendChild(svg);    
   }
   
+  #move(dx, dy) {
+    // Moving all nodes
+    for (const node of States.nodes) {
+      node.move(dx, dy);
+    }
+    
+    // Moving all edges
+    for (const edge of States.edges) {
+      edge.move();
+    }
+  }
 }
