@@ -1,5 +1,5 @@
 # Irish Stout
-Irish Stout is a DOM + SVG based Node-style UI library.
+Irish Stout is a DOM + SVG based Node-base UI library.
 
 Imspired by VFX/3D Graphic Application Such as SideFX Houdini, Maxon Cinema4D and Maya.<br>
 However, This library is not for graphics, it just a data flow controler.
@@ -9,3 +9,7 @@ However, This library is not for graphics, it just a data flow controler.
 1. add a node to instance of IrishStout.
 1. Connect node's by drag and drop on node's circle.
 
+## Example
+By **/example** directory, we implemented simple node style UI application.
+
+![screen](/readme/screen.png)

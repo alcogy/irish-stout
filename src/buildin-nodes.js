@@ -4,7 +4,7 @@ import Node from './node.js';
 export class NodeTextBox extends Node {
   constructor() {
     super();
-    this.label = 'Guinness';
+    this.label = 'Textbox';
   }
 
   makeIOs() {

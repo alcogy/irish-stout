@@ -42,6 +42,10 @@ export default class IrishStout {
     States.isHoldingContainer = true;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
+    const selected = document.querySelectorAll('div.node.selected');
+    for (const sel of selected) {
+      sel.classList.remove('selected');
+    }
   }
 
   #onMouseMove(e) {
@@ -99,7 +103,6 @@ export default class IrishStout {
       case 'Delete':
         States.selectedNode.remove();
         States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode.id);
-        // TODO Edge;
         for (const edge of States.edges) {
           if (edge.includeNode(States.selectedNode.id)) {
             edge.remove();
@@ -107,6 +110,12 @@ export default class IrishStout {
         }
         States.edges = States.edges.filter((v) => !v.includeNode(States.selectedNode.id));
         States.selectedNode = null;
+        break;
+      case 'Escape':
+        const selected = document.querySelectorAll('div.node.selected');
+        for (const sel of selected) {
+          sel.classList.remove('selected');
+        }
         break;
     }
   }
