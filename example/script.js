@@ -26,3 +26,10 @@ function selectNode(type) {
   }
 }
 
+
+const updateLabel = document.getElementById('update-label');
+updateLabel.addEventListener('click', onClickUpdateLabel);
+function onClickUpdateLabel() {
+  const label = document.getElementById('labeler');
+  stout.updateNodeProps({ label: label.value });
+}

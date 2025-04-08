@@ -1,7 +1,6 @@
 import { makeId, States } from './utils.js';
 
-
-export class Edge {
+export default class Edge {
   constructor(from, to) {
     this.id = makeId();
     this.from = from;

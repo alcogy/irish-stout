@@ -6,7 +6,9 @@ export default class Node {
     this.left = 30;
     this.top = 30;
     this.element = null;
-    this.ios = [];
+    this.props = {
+      label: 'node',
+    };
     // ...add your props.
     this.output = null;
   }
@@ -21,8 +23,11 @@ export default class Node {
     return [io];
   }
 
-  setLabel(v) {
-    this.label = v;
+  // abstruct for update node params.
+  update(props) {
+    this.props = {...props};
+    const title = this.element.getElementsByClassName('node-title')[0];
+    title.innerText = this.props.label;
   }
 
   move(difX, difY) {
@@ -37,8 +42,8 @@ export default class Node {
     const node = this.#makeNodeBase();
     const nodeIOs = this.#makeNodeIOConainer();
     
-    this.ios = this.makeIOs();
-    for (const io of this.ios) {
+    const ios = this.makeIOs();
+    for (const io of ios) {
       nodeIOs.appendChild(io.render());
     }
     node.appendChild(nodeIOs);
@@ -57,7 +62,7 @@ export default class Node {
     // Title
     const title = document.createElement('h3');
     title.classList.add('node-title');
-    title.innerText = this.label;
+    title.innerText = this.props.label;
 
     // Header
     const header = document.createElement('div');

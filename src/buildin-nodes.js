@@ -4,7 +4,7 @@ import Node from './node.js';
 export class NodeTextBox extends Node {
   constructor() {
     super();
-    this.label = 'Textbox';
+    this.props.label = 'Textbox';
     this.output = null;
   }
 
@@ -29,7 +29,7 @@ export class NodeTextBox extends Node {
 export class NodeNumberBox extends Node {
   constructor() {
     super();
-    this.label = 'Number';
+    this.props.label = 'Number';
     this.output = null;
   }
 
@@ -54,7 +54,7 @@ export class NodeNumberBox extends Node {
 export class NodeDisplay extends Node {
   constructor() {
     super();
-    this.label = 'Display';
+    this.props.label = 'Display';
     this.output = null;
     this.value = '';
   }
@@ -71,7 +71,7 @@ export class NodeDisplay extends Node {
 export class NodeCondition extends Node {
   constructor() {
     super();
-    this.label = 'condition';
+    this.props.label = 'condition';
     this.input1 = null;
     this.input2 = null;
     this.outTrue = null;
@@ -121,7 +121,7 @@ export class NodeCondition extends Node {
 export class NodeCalc extends Node {
   constructor() {
     super();
-    this.label = 'Calcurate';
+    this.props.label = 'Calcurate';
     this.value = 0;
     this.inputs = [];
     this.output = null;

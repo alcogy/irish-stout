@@ -1,5 +1,5 @@
 import { States } from './utils.js';
-import { Edge } from './edge.js';
+import Edge from './edge.js';
 
 export default class IrishStout {
   constructor(container) {
@@ -23,6 +23,11 @@ export default class IrishStout {
     States.nodes = States.nodes.filter((v) => v.id !== nodeId);
   }
 
+  updateNodeProps(props) {
+    if (States.selectedNode === null) return;
+    States.selectedNode.update(props);
+  }
+
   mount(dom) {
     States.container.appendChild(dom);
   }
@@ -31,6 +36,7 @@ export default class IrishStout {
     States.isHoldingContainer = true;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
+    States.selectedNode = null;
     const selected = document.querySelectorAll('div.node.selected');
     for (const sel of selected) {
       sel.classList.remove('selected');
