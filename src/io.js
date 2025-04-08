@@ -120,10 +120,9 @@ export class Input extends IO {
 }
 
 export class Output extends IO {
-  constructor(nodeId, body, value, notice) {
+  constructor(nodeId, body, value) {
     super(nodeId, body, value, 'output');
     this.connectTo = null;
-    this.notice = notice;
   }
 
   setConnect(io) {

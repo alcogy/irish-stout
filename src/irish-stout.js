@@ -28,6 +28,11 @@ export default class IrishStout {
     States.selectedNode.update(props);
   }
 
+  getSelectedNodeProps() {
+    if (States.selectedNode === null) return;
+    return States.selectedNode.props;
+  }
+
   mount(dom) {
     States.container.appendChild(dom);
   }
@@ -96,6 +101,7 @@ export default class IrishStout {
   #onKeyUp(e) {
     switch (e.key) {
       case 'Delete':
+        if (States.selectedNode === null) break;
         States.selectedNode.remove();
         States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode.id);
         for (const edge of States.edges) {

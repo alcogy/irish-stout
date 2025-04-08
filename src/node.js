@@ -37,6 +37,10 @@ export default class Node {
     this.element.style.top = this.top + 'px';
   }
 
+  remove() {
+    this.element.remove();
+  }
+  
   render() {
     // Node wrap
     const node = this.#makeNodeBase();
@@ -57,7 +61,7 @@ export default class Node {
     const node = document.createElement('div');
     node.id = this.id;
     node.classList.add('node');
-    node.addEventListener('mousedown', (e) => this.onMouseDown(e));
+    node.addEventListener('mousedown', (e) => this.#onMouseDown(e));
 
     // Title
     const title = document.createElement('h3');
@@ -81,7 +85,7 @@ export default class Node {
     return nodeIOs;
   }
 
-  onMouseDown(e) {
+  #onMouseDown(e) {
     e.stopPropagation();
     States.holdingNode = this;
     States.selectedNode = this;
@@ -93,10 +97,5 @@ export default class Node {
     }
     this.element.classList.add('selected');
   }
-  
-  remove() {
-    this.element.remove();
-  }
 
 }
-
