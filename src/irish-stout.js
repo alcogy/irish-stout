@@ -19,17 +19,6 @@ export default class IrishStout {
     this.mount(node.render());
   }
 
-  action() {
-    let result;
-    for (const node of States.nodes) {
-      result = node.action(result);
-    }
-
-    for (const edge of States.edges) {
-      edge.move();
-    }
-  }
-
   removeNode(nodeId) {
     States.nodes = States.nodes.filter((v) => v.id !== nodeId);
   }
@@ -153,4 +142,5 @@ export default class IrishStout {
       edge.move();
     }
   }
+
 }

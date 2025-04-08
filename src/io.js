@@ -21,8 +21,8 @@ class Connecting {
 
   move(x, y) {
     const end = {
-      top: y - States.offset.top,
-      left: x - States.offset.left,
+      top: y - States.offset.top  + window.scrollY,
+      left: x - States.offset.left + window.scrollX,
     }
     const path = this.#calcWirePath(this.from, end);
     this.path.setAttribute('d', path);
@@ -88,8 +88,8 @@ class IO {
     
     const rect = circle.getBoundingClientRect();
     const start = {
-      top: rect.top - States.offset.top + (rect.height / 2),
-      left: rect.left - States.offset.left - (rect.width / 2),
+      top: rect.top - States.offset.top + window.scrollY + (rect.height / 2),
+      left: rect.left - States.offset.left + window.scrollX - (rect.width / 2),
     }
     States.connecting = new Connecting(this, start);
     States.selectedIO.from = this;

@@ -5,6 +5,7 @@ export class NodeTextBox extends Node {
   constructor() {
     super();
     this.label = 'Textbox';
+    this.output = null;
   }
 
   makeIOs() {
@@ -13,19 +14,14 @@ export class NodeTextBox extends Node {
     body.addEventListener('change', (e) => this.#onChangeText(e));
     body.value = 'Hello Guinness!';
     const io = new Output(this.id, body, 'Hello Guinness!');
-    
-    return [io];
-  }
+    this.output = io;
 
-  action() {
-    for (const io of this.ios) {
-      io.update(this.value);
-    }
+    return [io];
   }
 
   #onChangeText(e) {
     this.value = e.target.value;
-    this.action();
+    this.output.update(this.value);
   }
 
 }
@@ -34,6 +30,7 @@ export class NodeNumberBox extends Node {
   constructor() {
     super();
     this.label = 'Number';
+    this.output = null;
   }
 
   makeIOs() {
@@ -43,19 +40,14 @@ export class NodeNumberBox extends Node {
     body.addEventListener('change', (e) => this.#onChangeText(e));
     body.value = 0;
     const io = new Output(this.id, body, 0);
-    
-    return [io];
-  }
+    this.output = io;
 
-  action() {
-    for (const io of this.ios) {
-      io.update(this.value);
-    }
+    return [io];
   }
 
   #onChangeText(e) {
     this.value = e.target.value;
-    this.action();
+    this.output.update(this.value);
   }
 }
 
@@ -73,10 +65,6 @@ export class NodeDisplay extends Node {
     const io = new Input(this.id, body, '', (v) => this.output.innerText = v);
     
     return [io];
-  }
-
-  action(v) {
-    this.output.innerText = v;
   }
 }
 
@@ -107,20 +95,16 @@ export class NodeCondition extends Node {
     const outTrue = document.createElement('div');
     outTrue.innerText = 'True';
     outTrue.classList.add('right');
-    this.outTrue = new Output(this.id, outTrue, 'True', () => this.#equals());
+    this.outTrue = new Output(this.id, outTrue, 'True');
     ios.push(this.outTrue);
 
     const outFalse = document.createElement('div');
     outFalse.innerText = 'False';
     outFalse.classList.add('right');
-    this.outFalse = new Output(this.id, outFalse, 'False', () => this.#equals());
+    this.outFalse = new Output(this.id, outFalse, 'False');
     ios.push(this.outFalse);
     
     return ios;
-  }
-
-  action() {
-    this.#equals();
   }
 
   #equals() {
@@ -162,10 +146,6 @@ export class NodeCalc extends Node {
     this.output = io;
     
     return ios;
-  }
-
-  action() {
-    this.calcuration();
   }
 
   #calcuration() {

@@ -21,11 +21,6 @@ export default class Node {
     return [io];
   }
 
-  // abstruct for execute function.
-  action() {
-    // Do something.
-  }
-
   setLabel(v) {
     this.label = v;
   }

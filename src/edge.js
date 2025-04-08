@@ -50,13 +50,13 @@ export class Edge {
   #getPoints() {
     const fromRect = this.from.gate.getBoundingClientRect();
     const start = {
-      top: fromRect.top - States.offset.top + (fromRect.height / 2),
-      left: fromRect.left - States.offset.left,
+      top: fromRect.top - States.offset.top + window.scrollY + (fromRect.height / 2),
+      left: fromRect.left - States.offset.left + window.scrollX,
     }
     const endRect = this.to.gate.getBoundingClientRect();
     const end = {
-      top: endRect.top - States.offset.top + (endRect.height / 2),
-      left: endRect.left - States.offset.left,
+      top: endRect.top - States.offset.top + window.scrollY + (endRect.height / 2),
+      left: endRect.left - States.offset.left + window.scrollX,
     }
     return [start, end];
   }
