@@ -53,8 +53,8 @@ export default class Node {
   
   render() {
     // Node wrap
-    const node = this.#makeNodeBase();
-    const nodeIOs = this.#makeNodeIOConainer();
+    const node = this.makeNodeBase();
+    const nodeIOs = this.makeNodeIOConainer();
     
     const ios = this.makeIOs();
     for (const io of ios) {
@@ -66,12 +66,15 @@ export default class Node {
     return node;
   }
 
-  #makeNodeBase() {
+  private makeNodeBase() {
     // node base.
     const node = document.createElement('div');
     node.id = this.id;
     node.classList.add('node');
-    node.addEventListener('mousedown', (e: MouseEvent) => this.#onMouseDown(e));
+    node.tabIndex = 1;
+    node.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e));
+    node.addEventListener('focus', (e: FocusEvent) => this.onFocus(e));
+    node.addEventListener('blur', (e: FocusEvent) => this.onBlur(e));
 
     // Title
     const title = document.createElement('h3');
@@ -89,24 +92,32 @@ export default class Node {
     return node;
   }
 
-  #makeNodeIOConainer() {
+  private makeNodeIOConainer() {
     const nodeIOs = document.createElement('div');
     nodeIOs.classList.add('node-ios');
     return nodeIOs;
   }
 
-  #onMouseDown(e: MouseEvent) {
+  private onMouseDown(e: MouseEvent) {
     e.stopPropagation();
     States.holdingNode = this;
-    States.selectedNode = this;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
+  }
+
+  private onFocus(e: FocusEvent) {
+    States.selectedNode = this;
     const selected = document.querySelectorAll('div.node.selected');
     for (const sel of selected) {
       sel.classList.remove('selected');
     }
     if (this.element === null) return;
     this.element.classList.add('selected');
+  }
+
+  private onBlur(e: FocusEvent) {
+    States.selectedNode = null;
+    this.element?.classList.remove('selected');
   }
 
 }

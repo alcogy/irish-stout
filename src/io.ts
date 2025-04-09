@@ -74,9 +74,9 @@ export class IO {
     circle.classList.add('circle');
     circle.id = this.id;
     circle.dataset.parentId = this.nodeId;
-    circle.addEventListener('mousedown', (e: MouseEvent) => this.#onMouseDownCircle(e, circle));
-    circle.addEventListener('mouseenter', (e: MouseEvent) => this.#onMouseEnterCircle(e));
-    circle.addEventListener('mouseleave', this.#onMouseLeaveCircle);
+    circle.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDownCircle(e, circle));
+    circle.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnterCircle(e));
+    circle.addEventListener('mouseleave', this.onMouseLeaveCircle);
     this.gate = circle;
 
     if (this.type === 'input') {
@@ -99,7 +99,7 @@ export class IO {
     this.value = v;
   }
 
-  #onMouseDownCircle(e: MouseEvent, gate: HTMLElement) {
+  private onMouseDownCircle(e: MouseEvent, gate: HTMLElement) {
     e.stopPropagation();
     
     const rect = gate.getBoundingClientRect();
@@ -113,11 +113,11 @@ export class IO {
     States.mouse.y = e.clientY;
   }
 
-  #onMouseEnterCircle(e: MouseEvent) {
+  private onMouseEnterCircle(e: MouseEvent) {
     States.selectedIO.to = this;
   }
   
-  #onMouseLeaveCircle(e: MouseEvent) {
+  private onMouseLeaveCircle(e: MouseEvent) {
     States.selectedIO.to = null
   }
 
