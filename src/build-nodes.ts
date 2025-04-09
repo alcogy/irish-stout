@@ -2,16 +2,20 @@ import { Input, Output } from './io.js';
 import Node from './node.js';
 
 export class NodeTextBox extends Node {
+  output: Output | null;
+  value: string;
+
   constructor() {
     super();
     this.props.label = 'Textbox';
     this.output = null;
+    this.value = '';
   }
 
   makeIOs() {
     const body = document.createElement('input');
     body.classList.add('textbox');
-    body.addEventListener('change', (e) => this.#onChangeText(e));
+    body.addEventListener('change', (e: Event) => this.onChangeText(e));
     body.value = 'Hello Guinness!';
     const io = new Output(this.id, body, 'Hello Guinness!');
     this.output = io;
@@ -19,39 +23,46 @@ export class NodeTextBox extends Node {
     return [io];
   }
 
-  #onChangeText(e) {
-    this.value = e.target.value;
-    this.output.update(this.value);
+  private onChangeText(e: Event) {
+    this.value = (e.target as HTMLInputElement).value;
+    this.output?.update(this.value);
   }
 
 }
 
 export class NodeNumberBox extends Node {
+  output: Output | null;
+  value: string;
+
   constructor() {
     super();
     this.props.label = 'Number';
     this.output = null;
+    this.value = '0';
   }
 
   makeIOs() {
     const body = document.createElement('input');
     body.type = 'number';
     body.classList.add('textbox');
-    body.addEventListener('change', (e) => this.#onChangeText(e));
-    body.value = 0;
+    body.addEventListener('change', (e: Event) => this.onChangeText(e));
+    body.value = '0';
     const io = new Output(this.id, body, 0);
     this.output = io;
 
     return [io];
   }
 
-  #onChangeText(e) {
-    this.value = e.target.value;
-    this.output.update(this.value);
+  private onChangeText(e: Event) {
+    this.value = (e.target as HTMLInputElement).value;
+    this.output?.update(this.value);
   }
 }
 
 export class NodeDisplay extends Node {
+  output: HTMLElement | null;
+  value: string;
+
   constructor() {
     super();
     this.props.label = 'Display';
@@ -62,13 +73,18 @@ export class NodeDisplay extends Node {
   makeIOs() {
     const body = document.createElement('div');
     this.output = body;
-    const io = new Input(this.id, body, '', (v) => this.output.innerText = v);
+    const io = new Input(this.id, body, '', (v) => this.output ? this.output.innerText = v : '');
     
     return [io];
   }
 }
 
 export class NodeCondition extends Node {
+  input1: Input | null;
+  input2: Input | null;
+  outTrue: Output | null;
+  outFalse: Output | null;
+
   constructor() {
     super();
     this.props.label = 'condition';
@@ -84,12 +100,12 @@ export class NodeCondition extends Node {
 
     const input1 = document.createElement('div');
     input1.innerText = 'input1';
-    this.input1 = new Input(this.id, input1, '', () => this.#equals());
+    this.input1 = new Input(this.id, input1, '', () => this.equals());
     ios.push(this.input1);
 
     const input2 = document.createElement('div');
     input2.innerText = 'input2';
-    this.input2 = new Input(this.id, input2, '', () => this.#equals());
+    this.input2 = new Input(this.id, input2, '', () => this.equals());
     ios.push(this.input2);
 
     const outTrue = document.createElement('div');
@@ -107,18 +123,22 @@ export class NodeCondition extends Node {
     return ios;
   }
 
-  #equals() {
-    if (this.input1.value === this.input2.value) {
-      this.outTrue.update('Equal!');
-      this.outFalse.update('--');
+  private equals() {
+    if (this.input1?.value === this.input2?.value) {
+      this.outTrue?.update('Equal!');
+      this.outFalse?.update('--');
     } else {
-      this.outTrue.update('--');
-      this.outFalse.update('Not Equal!');
+      this.outTrue?.update('--');
+      this.outFalse?.update('Not Equal!');
     }
   }
 }
 
 export class NodeCalc extends Node {
+  value: number;
+  inputs: Input[];
+  output: Output | null;
+
   constructor() {
     super();
     this.props.label = 'Calcurate';
@@ -153,6 +173,6 @@ export class NodeCalc extends Node {
     for (const io of this.inputs) {
       this.value += Number(io.value);
     }
-    this.output.update(this.value);
+    this.output?.update(this.value);
   }
 }
