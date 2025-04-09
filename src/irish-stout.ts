@@ -1,29 +1,37 @@
 import { States } from './utils.js';
 import Edge from './edge.js';
+import Node from './node.js';
+import { Output } from './io.js';
+import { styling } from './styling.js';
 
-export default class IrishStout {
-  constructor(container) {
+export class IrishStout {
+  constructor(container: any) {
     States.container = document.getElementById(container);
+    if (States.container === null) return;
     States.container.classList.add('irish-stout');
-    States.container.addEventListener('mousedown', (e) => this.#onMouseDown(e));
+    States.container.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e));
     States.offset.top = States.container.getBoundingClientRect()['top'];
     States.offset.left = States.container.getBoundingClientRect()['left'];
     
-    window.addEventListener('mousemove', (e) => this.#onMouseMove(e));
-    window.addEventListener('mouseup', (e) => this.#onMouseUp(e));
-    window.addEventListener('keyup', (e) => this.#onKeyUp(e));
+    window.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e));
+    window.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e));
+    window.addEventListener('keyup', (e: KeyboardEvent) => this.onKeyUp(e));
+
+    const style = document.createElement('style');
+    style.textContent = styling;
+    document.head.appendChild(style);
   }
 
-  addNode(node) {
+  addNode(node: Node) {
     States.nodes.push(node);
     this.mount(node.render());
   }
 
-  removeNode(nodeId) {
+  removeNode(nodeId: string) {
     States.nodes = States.nodes.filter((v) => v.id !== nodeId);
   }
 
-  updateNodeProps(props) {
+  updateNodeProps(props: any) {
     if (States.selectedNode === null) return;
     States.selectedNode.update(props);
   }
@@ -33,11 +41,13 @@ export default class IrishStout {
     return States.selectedNode.props;
   }
 
-  mount(dom) {
-    States.container.appendChild(dom);
+  mount(dom: HTMLElement) {
+    if (States.container !== null) {
+      States.container.appendChild(dom);
+    }
   }
 
-  #onMouseDown(e) {
+  private onMouseDown(e: MouseEvent) {
     States.isHoldingContainer = true;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
@@ -48,7 +58,7 @@ export default class IrishStout {
     }
   }
 
-  #onMouseMove(e) {
+  private onMouseMove(e: MouseEvent) {
     const diff = {
       x: e.clientX - States.mouse.x,
       y: e.clientY - States.mouse.y,
@@ -65,8 +75,8 @@ export default class IrishStout {
       // Remove curren connection
       for (const edge of States.edges) {
         if (edge.from.id === States.connecting.io.id || edge.to.id === States.connecting.io.id) {
-          if (edge.from.type === 'output') edge.from.setConnect(null);
-          if (edge.to.type === 'output') edge.to.setConnect(null);
+          if (edge.from.type === 'output') (edge.from as Output).setConnect(null);
+          if (edge.to.type === 'output') (edge.to as Output).setConnect(null);
           edge.remove();
           States.edges = States.edges.filter((v) => v !== edge);
 
@@ -76,16 +86,16 @@ export default class IrishStout {
       States.connecting.move(e.clientX, e.clientY);
 
     } else if (States.isHoldingContainer) {
-      this.#move(diff.x, diff.y);
+      this.move(diff.x, diff.y);
     }
 
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
   }
 
-  #onMouseUp() {
+  private onMouseUp(e: MouseEvent) {
     if (States.connecting) {
-      this.#connect();
+      this.connect();
       document.getElementById('drawing')?.remove();
     }
     
@@ -98,18 +108,18 @@ export default class IrishStout {
     }
   }
 
-  #onKeyUp(e) {
+  private onKeyUp(e: KeyboardEvent) {
     switch (e.key) {
       case 'Delete':
-        if (States.selectedNode === null) break;
+        if (States.selectedNode === null) return;
         States.selectedNode.remove();
-        States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode.id);
+        States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode?.id);
         for (const edge of States.edges) {
           if (edge.includeNode(States.selectedNode.id)) {
             edge.remove();
           }
         }
-        States.edges = States.edges.filter((v) => !v.includeNode(States.selectedNode.id));
+        States.edges = States.edges.filter((v) => States.selectedNode !== null && !v.includeNode(States.selectedNode.id));
         States.selectedNode = null;
         break;
       case 'Escape':
@@ -121,7 +131,7 @@ export default class IrishStout {
     }
   }
 
-  #connect() {
+  private connect() {
     if (States.selectedIO.from === null || States.selectedIO.to === null) return;
     if (States.selectedIO.from.type === States.selectedIO.to.type) return;
     for (const edge of States.edges) {
@@ -129,10 +139,10 @@ export default class IrishStout {
     }
     // Set connecttion on IO.
     if (States.selectedIO.from.type === 'output') {
-      States.selectedIO.from.setConnect(States.selectedIO.to);
+      (States.selectedIO.from as Output).setConnect(States.selectedIO.to);
       States.selectedIO.to.update(States.selectedIO.from.value);
     } else {
-      States.selectedIO.to.setConnect(States.selectedIO.from);
+      (States.selectedIO.to as Output).setConnect(States.selectedIO.from);
       States.selectedIO.from.update(States.selectedIO.to.value);
     }
 
@@ -140,10 +150,13 @@ export default class IrishStout {
     const edge = new Edge(States.selectedIO.from, States.selectedIO.to);
     States.edges.push(edge);
     const svg = edge.render();
-    States.container.appendChild(svg);    
+
+    if (States.container !== null) {
+      States.container.appendChild(svg);
+    }
   }
   
-  #move(dx, dy) {
+  private move(dx: number, dy: number) {
     // Moving all nodes
     for (const node of States.nodes) {
       node.move(dx, dy);

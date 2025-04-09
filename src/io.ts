@@ -1,6 +1,11 @@
-import { makeId, States } from './utils.js';
-class Connecting {
-  constructor(io, from) {
+import { makeId, States, Position } from './utils.js';
+
+export class Connecting {
+  io: IO;
+  from: Position;
+  path: SVGPathElement;
+
+  constructor(io: IO, from: Position) {
     this.io = io;
     this.from = from;
     
@@ -16,10 +21,12 @@ class Connecting {
     svg.id = 'drawing';
     svg.appendChild(path);
 
-    States.container.appendChild(svg);
+    if (States.container !== null) {
+      States.container.appendChild(svg);
+    }
   }
 
-  move(x, y) {
+  move(x: number, y: number) {
     const end = {
       top: y - States.offset.top  + window.scrollY,
       left: x - States.offset.left + window.scrollX,
@@ -28,7 +35,7 @@ class Connecting {
     this.path.setAttribute('d', path);
   }
 
-  #calcWirePath(start, end) {
+  #calcWirePath(start: Position, end: Position): string {
     const center = {
       left: (end.left + start.left) / 2,
       top: (end.top + start.top) / 2,
@@ -37,18 +44,27 @@ class Connecting {
   }
 
 }
-class IO {
-  
-  constructor(nodeId, body, value, type) {
+export class IO {
+  id: string;
+  nodeId: string;
+  body: HTMLElement;
+  type: 'input' | 'output';
+  value: any;
+  gate: HTMLButtonElement | null;  
+  notice?: (v: any) => any;
+  connectTo: IO | null;
+
+  constructor(nodeId: string, body: HTMLElement, value: any, type: 'input' | 'output') {
     this.id = makeId();
     this.nodeId = nodeId;
     this.body = body;
     this.type = type;
     this.value = value;
     this.gate = null;
+    this.connectTo = null;
   }
 
-  render() {
+  render(): HTMLDivElement {
     // io wrap
     const io = document.createElement('div');
     io.classList.add('io');
@@ -58,8 +74,8 @@ class IO {
     circle.classList.add('circle');
     circle.id = this.id;
     circle.dataset.parentId = this.nodeId;
-    circle.addEventListener('mousedown', (e) => this.#onMouseDownCircle(e, circle));
-    circle.addEventListener('mouseenter', (e) => this.#onMouseEnterCircle(e));
+    circle.addEventListener('mousedown', (e: MouseEvent) => this.#onMouseDownCircle(e, circle));
+    circle.addEventListener('mouseenter', (e: MouseEvent) => this.#onMouseEnterCircle(e));
     circle.addEventListener('mouseleave', this.#onMouseLeaveCircle);
     this.gate = circle;
 
@@ -79,14 +95,14 @@ class IO {
     return io;
   }
 
-  update(v) {
+  update(v: any) {
     this.value = v;
   }
 
-  #onMouseDownCircle(e, circle) {
+  #onMouseDownCircle(e: MouseEvent, gate: HTMLElement) {
     e.stopPropagation();
     
-    const rect = circle.getBoundingClientRect();
+    const rect = gate.getBoundingClientRect();
     const start = {
       top: rect.top - States.offset.top + window.scrollY + (rect.height / 2),
       left: rect.left - States.offset.left + window.scrollX - (rect.width / 2),
@@ -97,39 +113,39 @@ class IO {
     States.mouse.y = e.clientY;
   }
 
-  #onMouseEnterCircle(e) {
+  #onMouseEnterCircle(e: MouseEvent) {
     States.selectedIO.to = this;
   }
   
-  #onMouseLeaveCircle(e) {
+  #onMouseLeaveCircle(e: MouseEvent) {
     States.selectedIO.to = null
   }
 
 }
 
 export class Input extends IO {
-  constructor(nodeId, body, value, notice) {
+  constructor(nodeId: string, body: HTMLElement, value: any, notice: (v: any) => any) {
     super(nodeId, body, value, 'input');
     this.notice = notice;
   }
 
-  update(v) {
+  update(v: any) {
     super.update(v);
     this.notice && this.notice(this.value);
   }
 }
 
 export class Output extends IO {
-  constructor(nodeId, body, value) {
+  constructor(nodeId: string, body: HTMLElement, value: any) {
     super(nodeId, body, value, 'output');
     this.connectTo = null;
   }
 
-  setConnect(io) {
+  setConnect(io: IO | null) {
     this.connectTo = io;
   }
 
-  update(v) {
+  update(v: any) {
     super.update(v);
     if (this.connectTo === null) return;
     this.connectTo.update(this.value);

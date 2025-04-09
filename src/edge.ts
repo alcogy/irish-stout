@@ -1,7 +1,14 @@
-import { makeId, States } from './utils.js';
+import { makeId, Position, States } from './utils.js';
+import { IO } from './io.js';
 
 export default class Edge {
-  constructor(from, to) {
+  id: string;
+  from: IO;
+  to: IO;
+  path: SVGPathElement | null;
+  element: SVGElement | null;
+
+  constructor(from: IO, to: IO) {
     this.id = makeId();
     this.from = from;
     this.to = to;
@@ -15,7 +22,7 @@ export default class Edge {
     path.setAttribute('stroke', 'gray');
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke-width', '2');
-    path.setAttribute('d', this.#calcWirePath());
+    path.setAttribute('d', this.calcWirePath());
     this.path = path;
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -26,19 +33,21 @@ export default class Edge {
   }
 
   move() {
-    this.path.setAttribute('d', this.#calcWirePath());
+    if (this.path === null) return;
+    this.path.setAttribute('d', this.calcWirePath());
   }
 
   remove() {
+    if (this.element === null) return;
     this.element.remove();
   }
 
-  includeNode(nodeId) {
+  includeNode(nodeId: string): boolean {
     return nodeId === this.from.nodeId || nodeId === this.to.nodeId;
   }
 
-  #calcWirePath() {
-    const [start, end] = this.#getPoints();
+  private calcWirePath(): string {
+    const [start, end] = this.getPoints();
     const center = {
       left: (end.left + start.left) / 2,
       top: (end.top + start.top) / 2,
@@ -46,7 +55,11 @@ export default class Edge {
     return `M ${start.left} ${start.top} Q ${(center.left + start.left) / 2} ${start.top}, ${center.left} ${center.top} T ${end.left} ${end.top}`;
   }
 
-  #getPoints() {
+  private getPoints(): [Position, Position] {
+    if (this.from.gate === null || this.to.gate === null) {
+      return [{left: 0, top: 0}, {left: 0, top: 0}];
+    }
+    
     const fromRect = this.from.gate.getBoundingClientRect();
     const start = {
       top: fromRect.top - States.offset.top + window.scrollY + (fromRect.height / 2),

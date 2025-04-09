@@ -1,43 +1,53 @@
 import { makeId, States } from './utils.js';
 import { Output } from './io.js';
 export default class Node {
+  id: string;
+  left: number;
+  top: number;
+  element: HTMLElement | null;
+  props: any;
+
   constructor() {
     this.id = makeId();
     this.left = 30;
     this.top = 30;
     this.element = null;
+
+    // ...add your props.
     this.props = {
       label: 'node',
     };
-    // ...add your props.
-    this.output = null;
   }
 
   // abstruct for render body(io).
-  makeIOs() {
+  makeIOs(): any[] {
     const body = document.createElement('div');
-    body.value = 'Hello Guinness!';
-    const io = new Output(this.id, 'output', body, 'Hello Guinness!');
+    body.innerText = 'Hello Guinness!';
+    const io = new Output(this.id, body, 'output');
 
     // return must array for up to down.
     return [io];
   }
 
   // abstruct for update node params.
-  update(props) {
+  update(props: any) {
     this.props = {...props};
-    const title = this.element.getElementsByClassName('node-title')[0];
-    title.innerText = this.props.label;
+    const title = this.element?.getElementsByClassName('node-title')[0] as HTMLElement;
+    if (title !== null) {
+      title.innerText = this.props.label;
+    }
   }
 
-  move(difX, difY) {
+  move(difX: number, difY: number) {
     this.left += difX;
     this.top += difY;
+    if (this.element === null) return;
     this.element.style.left = this.left + 'px';
     this.element.style.top = this.top + 'px';
   }
 
   remove() {
+    if (this.element === null) return;
     this.element.remove();
   }
   
@@ -61,7 +71,7 @@ export default class Node {
     const node = document.createElement('div');
     node.id = this.id;
     node.classList.add('node');
-    node.addEventListener('mousedown', (e) => this.#onMouseDown(e));
+    node.addEventListener('mousedown', (e: MouseEvent) => this.#onMouseDown(e));
 
     // Title
     const title = document.createElement('h3');
@@ -85,7 +95,7 @@ export default class Node {
     return nodeIOs;
   }
 
-  #onMouseDown(e) {
+  #onMouseDown(e: MouseEvent) {
     e.stopPropagation();
     States.holdingNode = this;
     States.selectedNode = this;
@@ -95,6 +105,7 @@ export default class Node {
     for (const sel of selected) {
       sel.classList.remove('selected');
     }
+    if (this.element === null) return;
     this.element.classList.add('selected');
   }
 

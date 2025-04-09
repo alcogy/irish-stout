@@ -1,0 +1,26 @@
+{
+  "name": "irish-stout",
+  "version": "0.0.1",
+  "description": "Irish Stout is a DOM + SVG based Node-base UI library.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/alcogy/irish-stout"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [
+    "UI library"
+  ],
+  "author": "Alcogy Inc.",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
+  }
+}

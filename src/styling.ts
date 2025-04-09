@@ -1,3 +1,4 @@
+export const styling = `
 .irish-stout,
 .irish-stout * {
   box-sizing: border-box;
@@ -147,3 +148,4 @@
   top: 0;
   z-index: 0;
 }
+`;
