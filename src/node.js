@@ -61,7 +61,10 @@ export default class Node {
     const node = document.createElement('div');
     node.id = this.id;
     node.classList.add('node');
+    node.tabIndex = 1;
     node.addEventListener('mousedown', (e) => this.#onMouseDown(e));
+    node.addEventListener('focus', (e) => this.#onFocus(e));
+    node.addEventListener('blur', (e) => this.#onBlur(e));
 
     // Title
     const title = document.createElement('h3');
@@ -88,9 +91,12 @@ export default class Node {
   #onMouseDown(e) {
     e.stopPropagation();
     States.holdingNode = this;
-    States.selectedNode = this;
     States.mouse.x = e.clientX;
     States.mouse.y = e.clientY;
+  }
+
+  #onFocus(e) {
+    States.selectedNode = this;
     const selected = document.querySelectorAll('div.node.selected');
     for (const sel of selected) {
       sel.classList.remove('selected');
@@ -98,4 +104,8 @@ export default class Node {
     this.element.classList.add('selected');
   }
 
+  #onBlur(e) {
+    States.selectedNode = null;
+    this.element.classList.remove('selected');
+  }
 }

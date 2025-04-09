@@ -102,14 +102,15 @@ export default class IrishStout {
     switch (e.key) {
       case 'Delete':
         if (States.selectedNode === null) break;
+        const selectedId = States.selectedNode.id;
         States.selectedNode.remove();
-        States.nodes = States.nodes.filter((v) => v.id !== States.selectedNode.id);
+        States.nodes = States.nodes.filter((v) => v.id !== selectedId);
         for (const edge of States.edges) {
-          if (edge.includeNode(States.selectedNode.id)) {
+          if (edge.includeNode(selectedId)) {
             edge.remove();
           }
         }
-        States.edges = States.edges.filter((v) => !v.includeNode(States.selectedNode.id));
+        States.edges = States.edges.filter((v) => !v.includeNode(selectedId));
         States.selectedNode = null;
         break;
       case 'Escape':
