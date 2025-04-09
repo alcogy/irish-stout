@@ -17,7 +17,7 @@ export default class Node {
   makeIOs() {
     const body = document.createElement('div');
     body.value = 'Hello Guinness!';
-    const io = new Output(this.id, 'output', body, 'Hello Guinness!');
+    const io = new Output(this.id, body, 'output');
 
     // return must array for up to down.
     return [io];

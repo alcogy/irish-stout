@@ -1,5 +1,5 @@
 import IrishStout from '../src/irish-stout.js';
-import { NodeTextBox, NodeDisplay, NodeCondition, NodeNumberBox, NodeCalc } from '../src/buildin-nodes.js';
+import { NodeTextBox, NodeDisplay, NodeCondition, NodeNumberBox, NodeCalc } from '../src/build-nodes.js';
 
 const stout = new IrishStout("root");
 

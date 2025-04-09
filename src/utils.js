@@ -29,7 +29,7 @@ export function makeId() {
   result += '-' + new Date().getTime().toString().substring(6);
   
   if (document.getElementById(result)) {
-    return makeIO();
+    return makeId();
   }
 
   return result;
