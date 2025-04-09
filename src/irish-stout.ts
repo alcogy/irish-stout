@@ -2,6 +2,7 @@ import { States } from './utils.js';
 import Edge from './edge.js';
 import Node from './node.js';
 import { Output } from './io.js';
+import { styling } from './styling.js';
 
 export class IrishStout {
   constructor(container: any) {
@@ -15,6 +16,10 @@ export class IrishStout {
     window.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e));
     window.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e));
     window.addEventListener('keyup', (e: KeyboardEvent) => this.onKeyUp(e));
+
+    const style = document.createElement('style');
+    style.textContent = styling;
+    document.head.appendChild(style);
   }
 
   addNode(node: Node) {
