@@ -1,67 +1,25 @@
-import { makeId, States, Position } from './utils.js';
+import { makeId, States, IOType } from './utils.js';
+import { Connecting } from './edge.js';
 
-export class Connecting {
-  io: IO;
-  from: Position;
-  path: SVGPathElement;
-
-  constructor(io: IO, from: Position) {
-    this.io = io;
-    this.from = from;
-    
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.id = 'drawing-path';
-    path.setAttribute('stroke', 'lightgray');
-    path.setAttribute('fill', 'transparent');
-    path.setAttribute('stroke-width', '2');
-    path.setAttribute('stroke-dasharray', '2');
-    this.path = path;
-
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.id = 'drawing';
-    svg.appendChild(path);
-
-    if (States.container !== null) {
-      States.container.appendChild(svg);
-    }
-  }
-
-  move(x: number, y: number) {
-    const end = {
-      top: y - States.offset.top  + window.scrollY,
-      left: x - States.offset.left + window.scrollX,
-    }
-    const path = this.#calcWirePath(this.from, end);
-    this.path.setAttribute('d', path);
-  }
-
-  #calcWirePath(start: Position, end: Position): string {
-    const center = {
-      left: (end.left + start.left) / 2,
-      top: (end.top + start.top) / 2,
-    }
-    return `M ${start.left} ${start.top} Q ${(center.left + start.left) / 2} ${start.top}, ${center.left} ${center.top} T ${end.left} ${end.top}`;
-  }
-
-}
 export class IO {
   id: string;
   nodeId: string;
-  body: HTMLElement;
-  type: 'input' | 'output';
+  type: IOType;
+  label: string;
+  labelElement: HTMLElement | null;
   value: any;
   gate: HTMLButtonElement | null;  
-  notice?: (v: any) => any;
-  connectTo: IO | null;
-
-  constructor(nodeId: string, body: HTMLElement, value: any, type: 'input' | 'output') {
+  element: HTMLElement | null;
+  
+  constructor(nodeId: string, value: any, label: string, type: IOType) {
     this.id = makeId();
     this.nodeId = nodeId;
-    this.body = body;
     this.type = type;
+    this.label = label;
+    this.labelElement = null;
     this.value = value;
     this.gate = null;
-    this.connectTo = null;
+    this.element = null;
   }
 
   render(): HTMLDivElement {
@@ -83,20 +41,33 @@ export class IO {
       io.appendChild(circle);
     }
 
-    const wrap = document.createElement('div');
-    wrap.classList.add('io-body');
-    wrap.appendChild(this.body);
-    io.appendChild(wrap);
+    const label = document.createElement('p');
+    label.classList.add('io-label');
+    if (this.type === 'output') {
+      label.classList.add('right');
+    }
+    label.innerText = this.label;
+    this.labelElement = label;
+    io.appendChild(label);
 
     if (this.type === 'output') {
       io.appendChild(circle);
     }
+
+    this.element = io;
 
     return io;
   }
 
   update(v: any) {
     this.value = v;
+  }
+
+  updateLabel(v: string) {
+    this.label = v;
+    if (this.labelElement !== null) {
+      (this.labelElement as HTMLElement).innerText = this.label;
+    }
   }
 
   private onMouseDownCircle(e: MouseEvent, gate: HTMLElement) {
@@ -124,20 +95,24 @@ export class IO {
 }
 
 export class Input extends IO {
-  constructor(nodeId: string, body: HTMLElement, value: any, notice: (v: any) => any) {
-    super(nodeId, body, value, 'input');
+  notice?: (v: Input) => any;
+
+  constructor(nodeId: string, notice: (v: any) => any) {
+    super(nodeId, '', 'input', 'input');
     this.notice = notice;
   }
 
   update(v: any) {
     super.update(v);
-    this.notice && this.notice(this.value);
+    this.notice && this.notice(this);
   }
 }
 
 export class Output extends IO {
-  constructor(nodeId: string, body: HTMLElement, value: any) {
-    super(nodeId, body, value, 'output');
+  connectTo: IO | null;
+
+  constructor(nodeId: string) {
+    super(nodeId, '', 'output', 'output');
     this.connectTo = null;
   }
 

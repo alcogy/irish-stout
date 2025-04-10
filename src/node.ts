@@ -1,41 +1,47 @@
-import { makeId, States } from './utils.js';
+import { makeId, States, NodeProps } from './utils.js';
 import { Output } from './io.js';
+
 export default class Node {
   id: string;
   left: number;
   top: number;
-  element: HTMLElement | null;
-  props: any;
+  element: HTMLElement | null = null;
+  props: NodeProps;
+  onSelected?: (node: Node) => void;
 
   constructor() {
     this.id = makeId();
     this.left = 30;
     this.top = 30;
-    this.element = null;
-
-    // ...add your props.
+    
+    // ...override your props for io.
     this.props = {
       label: 'node',
+      ios: [
+        { io: new Output(this.id), value: 'value', label: 'output' },
+      ],
     };
   }
 
-  // abstruct for render body(io).
-  makeIOs(): any[] {
-    const body = document.createElement('div');
-    body.innerText = 'Hello Guinness!';
-    const io = new Output(this.id, body, 'output');
-
-    // return must array for up to down.
-    return [io];
-  }
-
   // abstruct for update node params.
-  update(props: any) {
-    this.props = {...props};
-    const title = this.element?.getElementsByClassName('node-title')[0] as HTMLElement;
+  update(props: NodeProps) {
+    this.props = props;
+    // Label
+    const title = this.element?.querySelector('.node-title') as HTMLElement;
     if (title !== null) {
       title.innerText = this.props.label;
     }
+
+    for (const prop of this.props.ios) {
+      prop.io.updateLabel(prop.label);
+      if (prop.io.type === 'output') {
+        prop.io.update(prop.value);
+      }
+    }
+  }
+
+  bindOnSelected(fn: (node: Node) => void) {
+    this.onSelected = fn;
   }
 
   move(difX: number, difY: number) {
@@ -58,13 +64,28 @@ export default class Node {
     
     const ios = this.makeIOs();
     for (const io of ios) {
-      nodeIOs.appendChild(io.render());
+      nodeIOs.appendChild(io);
     }
     node.appendChild(nodeIOs);
 
     this.element = node;
     return node;
   }
+
+  private makeIOs(): HTMLElement[] {
+    const render: HTMLElement[] = [];
+
+    for (const io of this.props.ios) {
+      io.io.label = io.label;
+      if (io.io.type === 'output') {
+        io.io.value = io.value;
+      }
+      render.push(io.io.render());
+    }
+    // return must array for up to down.
+    return render;
+  }
+
 
   private makeNodeBase() {
     // node base.
@@ -111,8 +132,12 @@ export default class Node {
     for (const sel of selected) {
       sel.classList.remove('selected');
     }
+    const editing = document.querySelector('div.node.editing');
+    editing?.classList.remove('editing');
+    
     if (this.element === null) return;
     this.element.classList.add('selected');
+    this.onSelected && this.onSelected(this);
   }
 
   private onBlur(e: FocusEvent) {

@@ -15,7 +15,7 @@
     "build": "tsup"
   },
   "keywords": [
-    "UI library"
+    "ui-library", "front-end"
   ],
   "author": "Alcogy Inc.",
   "license": "MIT",

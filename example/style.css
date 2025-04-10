@@ -64,14 +64,3 @@ select.type-selector {
 #root {
   height: calc(100vh - 104px);
 }
-
-input[type="text"] { 
-  margin-left: 48px;
-  height: 32px;
-  background-color: #222;
-  color: #eee;
-  border: 0;
-  outline: none;
-  border-radius: 4px;
-  padding: 0 8px;
-}

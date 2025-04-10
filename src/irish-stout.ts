@@ -1,12 +1,15 @@
-import { States } from './utils.js';
+import { NodeProps, States } from './utils.js';
 import Edge from './edge.js';
 import Node from './node.js';
 import { Output } from './io.js';
 import { styling } from './styling.js';
+import PropsPanel from './props-panel.js';
 
 export class IrishStout {
-  constructor(container: any) {
-    States.container = document.getElementById(container);
+  panel: PropsPanel = new PropsPanel(this.updateProps);
+
+  constructor(containerId: string) {
+    States.container = document.getElementById(containerId);
     if (States.container === null) return;
     States.container.classList.add('irish-stout');
     States.container.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e));
@@ -20,25 +23,18 @@ export class IrishStout {
     const style = document.createElement('style');
     style.textContent = styling;
     document.head.appendChild(style);
+    
+    States.container.appendChild(this.panel.render());
   }
 
   addNode(node: Node) {
+    node.bindOnSelected((n) => this.onSelectedNode(n));
     States.nodes.push(node);
     this.mount(node.render());
   }
 
   removeNode(nodeId: string) {
     States.nodes = States.nodes.filter((v) => v.id !== nodeId);
-  }
-
-  updateNodeProps(props: any) {
-    if (States.selectedNode === null) return;
-    States.selectedNode.update(props);
-  }
-
-  getSelectedNodeProps() {
-    if (States.selectedNode === null) return;
-    return States.selectedNode.props;
   }
 
   mount(dom: HTMLElement) {
@@ -56,6 +52,7 @@ export class IrishStout {
     for (const sel of selected) {
       sel.classList.remove('selected');
     }
+    this.panel.reset();
   }
 
   private onMouseMove(e: MouseEvent) {
@@ -78,6 +75,7 @@ export class IrishStout {
           if (edge.from.type === 'output') (edge.from as Output).setConnect(null);
           if (edge.to.type === 'output') (edge.to as Output).setConnect(null);
           edge.remove();
+          edge.to.update(null);
           States.edges = States.edges.filter((v) => v !== edge);
 
           break;
@@ -118,6 +116,7 @@ export class IrishStout {
         for (const edge of States.edges) {
           if (edge.includeNode(selectedId)) {
             edge.remove();
+            edge.to.update(null);
           }
         }
         States.edges = States.edges.filter((v) => !v.includeNode(selectedId));
@@ -128,6 +127,11 @@ export class IrishStout {
         for (const sel of selected) {
           sel.classList.remove('selected');
         }
+        const editing = document.querySelector('div.node.editing');
+        editing?.classList.remove('editing');
+
+        States.selectedNode = null;
+        this.panel.reset();
         break;
     }
   }
@@ -167,6 +171,15 @@ export class IrishStout {
     for (const edge of States.edges) {
       edge.move();
     }
+  }
+
+  private onSelectedNode(node: Node) {
+    States.container?.appendChild(this.panel.setNode(node));
+  }
+
+  private updateProps(props: NodeProps | null) {
+    if (States.editingNode === null || props === null) return;
+    States.editingNode.update(props);
   }
 
 }

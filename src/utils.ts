@@ -1,7 +1,9 @@
 import Node from "./node";
 import Edge from "./edge";
-import { IO, Connecting } from "./io";
+import { IO, Input, Output } from "./io";
+import { Connecting } from "./edge";
 
+export type IOType = 'input' | 'output';
 export interface Position {
   left: number;
   top: number;
@@ -12,10 +14,21 @@ export interface Point {
   y: number;
 }
 
+export interface NodeProps {
+  label: string;
+  ios: IOprops[];
+};
+export interface IOprops {
+  io: Input | Output;
+  value: any;
+  label: string;
+}
+
 interface GlobalModel {
   container: HTMLElement | null;
   selectedNode: Node | null;
   holdingNode: Node | null;
+  editingNode: Node | null;
   isHoldingContainer: boolean;
   selectedIO: {
     from: IO | null,
@@ -35,6 +48,7 @@ export const States: GlobalModel = {
   container: null,
   selectedNode: null,
   holdingNode: null,
+  editingNode: null,
   isHoldingContainer: false,
   selectedIO: {
     from: null,

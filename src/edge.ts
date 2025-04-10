@@ -5,15 +5,13 @@ export default class Edge {
   id: string;
   from: IO;
   to: IO;
-  path: SVGPathElement | null;
-  element: SVGElement | null;
+  path: SVGPathElement | null = null;
+  element: SVGElement | null = null;
 
   constructor(from: IO, to: IO) {
     this.id = makeId();
     this.from = from;
     this.to = to;
-    this.path = null;
-    this.element = null;
   }
 
   render() {
@@ -72,6 +70,49 @@ export default class Edge {
     }
     return [start, end];
   }
-
 }
 
+export class Connecting {
+  io: IO;
+  from: Position;
+  path: SVGPathElement;
+
+  constructor(io: IO, from: Position) {
+    this.io = io;
+    this.from = from;
+    
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.id = 'drawing-path';
+    path.setAttribute('stroke', 'lightgray');
+    path.setAttribute('fill', 'transparent');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-dasharray', '2');
+    this.path = path;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = 'drawing';
+    svg.appendChild(path);
+
+    if (States.container !== null) {
+      States.container.appendChild(svg);
+    }
+  }
+
+  move(x: number, y: number) {
+    const end = {
+      top: y - States.offset.top  + window.scrollY,
+      left: x - States.offset.left + window.scrollX,
+    }
+    const path = this.calcWirePath(this.from, end);
+    this.path.setAttribute('d', path);
+  }
+
+  private calcWirePath(start: Position, end: Position): string {
+    const center = {
+      left: (end.left + start.left) / 2,
+      top: (end.top + start.top) / 2,
+    }
+    return `M ${start.left} ${start.top} Q ${(center.left + start.left) / 2} ${start.top}, ${center.left} ${center.top} T ${end.left} ${end.top}`;
+  }
+
+}

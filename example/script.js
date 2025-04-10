@@ -31,12 +31,3 @@ function selectNode(type) {
       return new NodeCalc();
   }
 }
-
-
-const updateLabel = document.getElementById('update-label');
-updateLabel.addEventListener('click', onClickUpdateLabel);
-function onClickUpdateLabel() {
-  // const label = document.getElementById('labeler');
-  const props = stout.getSelectedNodeProps();
-  console.log(props);
-}
