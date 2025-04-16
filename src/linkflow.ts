@@ -5,13 +5,13 @@ import { Output } from './io.js';
 import { styling } from './styling.js';
 import PropsPanel from './props-panel.js';
 
-export class IrishStout {
+export class Linkflow {
   panel: PropsPanel = new PropsPanel(this.updateProps);
 
   constructor(containerId: string) {
     States.container = document.getElementById(containerId);
     if (States.container === null) return;
-    States.container.classList.add('irish-stout');
+    States.container.classList.add('linkflow');
     States.container.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e));
     States.offset.top = States.container.getBoundingClientRect()['top'];
     States.offset.left = States.container.getBoundingClientRect()['left'];

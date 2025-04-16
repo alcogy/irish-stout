@@ -1,6 +1,6 @@
 export const styling = `
-.irish-stout,
-.irish-stout * {
+.linkflow,
+.linkflow * {
   box-sizing: border-box;
   outline: none;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -9,7 +9,7 @@ export const styling = `
 /********************
 *       base 
 *********************/
-.irish-stout {
+.linkflow {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -21,7 +21,7 @@ export const styling = `
 /********************
 *       node 
 *********************/
-.irish-stout div.node {
+.linkflow div.node {
   background-color: #101010;
   width: 200px;
   position: absolute;
@@ -31,41 +31,41 @@ export const styling = `
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
-.irish-stout div.node-header {
+.linkflow div.node-header {
   padding: 5px 10px;
   display: flex;
   align-items: center;
   border-radius: 6px 6px 0 0;
   background-color: #505050;
 }
-.irish-stout h3.node-title {
+.linkflow h3.node-title {
   margin: 0;
   padding: 0;
   font-weight: normal;
   font-size: 0.8rem;
 }
-.irish-stout input.node-title-input {
+.linkflow input.node-title-input {
   background-color: transparent;
   border: 0;
   color: #eee;
   width: 100%;
   outline: none;
 }
-.irish-stout div.node-inputs .item {
+.linkflow div.node-inputs .item {
   height: 36px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.irish-stout div.node-textbox {
+.linkflow div.node-textbox {
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 6px;
 }
-.irish-stout div.node-textbox input {
+.linkflow div.node-textbox input {
   border: 1px solid #555;
   background-color: #222;
   padding: 4px 8px;
@@ -73,7 +73,7 @@ export const styling = `
   color: #ddd;
   border-radius: 4px;
 }
-.irish-stout div.node .node-ios .textbox {
+.linkflow div.node .node-ios .textbox {
   border: 1px solid #555;
   background-color: #222;
   padding: 4px 8px;
@@ -85,16 +85,16 @@ export const styling = `
 /********************
 *       IO 
 *********************/
-.irish-stout div.node-ios {
+.linkflow div.node-ios {
   padding: 0 2px;
 }
-.irish-stout div.io {
+.linkflow div.io {
   display: flex;
   align-items: center;
   padding: 5px 2px;
   gap: 4px;
 }
-.irish-stout div.io p.io-label {
+.linkflow div.io p.io-label {
   flex: 1;
   padding: 0 4px;
   white-space: nowrap;
@@ -102,17 +102,17 @@ export const styling = `
   text-overflow: ellipsis;
   margin: 0;
 }
-.irish-stout div.io p.io-label.right {
+.linkflow div.io p.io-label.right {
   text-align: right;
 }
-.irish-stout div.node.editing {
+.linkflow div.node.editing {
   outline: 2px solid #777;
 }
-.irish-stout div.node.selected {
+.linkflow div.node.selected {
   outline: 2px solid #139a3a !important;
   z-index: 100 !important;
 }
-.irish-stout div.node .circle {
+.linkflow div.node .circle {
   border: 0;
   background-color: var(--accent-color);
   width: 12px;
@@ -120,12 +120,12 @@ export const styling = `
   padding: 0;
   border-radius: 9999px;
 }
-.irish-stout div.node .circle:hover,
-.irish-stout div.node .circle.active {
+.linkflow div.node .circle:hover,
+.linkflow div.node .circle.active {
   background-color: var(--accent-color);
   opacity: 0.8;
 }
-.irish-stout div.node .circle.connected {
+.linkflow div.node .circle.connected {
   background-color: var(--main-color);
 }
 
@@ -133,7 +133,7 @@ export const styling = `
 /********************
 *       Edge 
 *********************/
-.irish-stout svg {
+.linkflow svg {
   min-width: 100%;
   min-height: 100%;
   position: absolute;
@@ -146,7 +146,7 @@ export const styling = `
 /********************
 *       Panel 
 *********************/
-.irish-stout div.props-panel {
+.linkflow div.props-panel {
   position: absolute;
   right: 5px;
   top: 5px;
@@ -159,13 +159,13 @@ export const styling = `
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
 }
-.irish-stout div.props-panel h3.title {
+.linkflow div.props-panel h3.title {
   margin: 0;
 }
-.irish-stout div.props-panel div.params-wrap {
+.linkflow div.props-panel div.params-wrap {
   margin: 16px 0 24px 0;
 }
-.irish-stout div.props-panel ul.params-list {
+.linkflow div.props-panel ul.params-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -173,13 +173,13 @@ export const styling = `
   flex-direction: column;
   gap: 16px;
 }
-.irish-stout div.props-panel ul.params-list label {
+.linkflow div.props-panel ul.params-list label {
   color: #d0d0d0;
 }
-.irish-stout div.props-panel ul.params-list div {
+.linkflow div.props-panel ul.params-list div {
   margin-top: 4px;
 }
-.irish-stout div.props-panel ul.params-list input {
+.linkflow div.props-panel ul.params-list input {
   width: 100%;
   background-color: #383838;
   border: 0;
@@ -187,7 +187,7 @@ export const styling = `
   color: #eee;
   border-radius: 6px;
 }
-.irish-stout div.props-panel div.button-wrap button {
+.linkflow div.props-panel div.button-wrap button {
   border: 0;
   background-color: #444;
   color: #ddd;
@@ -195,7 +195,7 @@ export const styling = `
   border-radius: 4px;
   cursor: pointer;
 }
-.irish-stout div.props-panel div.button-wrap button:hover {
+.linkflow div.props-panel div.button-wrap button:hover {
   opacity: 0.8;
 }
 `;

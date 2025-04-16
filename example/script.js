@@ -1,5 +1,5 @@
 import {
-  IrishStout,
+  Linkflow,
   NodeTextBox,
   NodeDisplay,
   NodeNumberBox,
@@ -7,14 +7,14 @@ import {
   NodeCalc
 } from '../dist/index.mjs';
 
-const stout = new IrishStout("root");
+const lf = new Linkflow("root");
 
 // Mouse event on Buttons.
 const addButton = document.getElementById('add-node');
 addButton.addEventListener('click', onClickAddNode);
 function onClickAddNode() {
   const type = document.getElementById('node-type');
-  stout.addNode(selectNode(type.value));
+  lf.addNode(selectNode(type.value));
 }
 
 function selectNode(type) {

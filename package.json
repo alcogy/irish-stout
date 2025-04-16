@@ -1,12 +1,12 @@
 {
-  "name": "irish-stout",
+  "name": "linkflow",
   "version": "0.0.1",
-  "description": "Irish Stout is a DOM + SVG based Node-base UI library.",
+  "description": "Linkflow is a DOM + SVG based Node-base UI library.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "repository": {
-    "url": "https://github.com/alcogy/irish-stout"
+    "url": "https://github.com/alcogy/linkflow"
   },
   "directories": {
     "example": "example"

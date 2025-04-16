@@ -7,7 +7,7 @@ export class NodeTextBox extends Node {
     this.props = {
       label: 'Textbox',
       ios: [
-        { io: new Output(this.id), value: 'Hello Guinness!', label: 'output' },
+        { io: new Output(this.id), value: 'Hello Linkflow!', label: 'output' },
       ],
     };
   }

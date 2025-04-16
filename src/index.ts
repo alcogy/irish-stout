@@ -1,4 +1,4 @@
-export * from './irish-stout';
+export * from './linkflow';
 export * from './node';
 export * from './edge';
 export * from './io';
