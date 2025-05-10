@@ -1,5 +1,5 @@
-import { makeId, States, NodeProps } from './utils.js';
-import { Output } from './io.js';
+import { makeId, States, NodeProps } from './utils';
+import { Output } from './io';
 
 export default class Node {
   id: string;
@@ -55,6 +55,7 @@ export default class Node {
   remove() {
     if (this.element === null) return;
     this.element.remove();
+    this.element = null;
   }
   
   render() {

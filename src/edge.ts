@@ -1,5 +1,5 @@
-import { makeId, Position, States } from './utils.js';
-import { IO } from './io.js';
+import { makeId, Position, States } from './utils';
+import { IO } from './io';
 
 export default class Edge {
   id: string;

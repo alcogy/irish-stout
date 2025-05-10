@@ -1,5 +1,5 @@
-import { makeId, States, IOType } from './utils.js';
-import { Connecting } from './edge.js';
+import { makeId, States, IOType } from './utils';
+import { Connecting } from './edge';
 
 export class IO {
   id: string;

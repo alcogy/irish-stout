@@ -1,5 +1,5 @@
-import { Input, Output } from './io.js';
-import Node from './node.js';
+import { Input, Output } from './io';
+import Node from './node';
 
 export class NodeTextBox extends Node {
   constructor() {

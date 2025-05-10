@@ -1,9 +1,9 @@
-import { NodeProps, States } from './utils.js';
-import Edge from './edge.js';
-import Node from './node.js';
-import { Output } from './io.js';
-import { styling } from './styling.js';
-import PropsPanel from './props-panel.js';
+import { NodeProps, States } from './utils';
+import Edge from './edge';
+import Node from './node';
+import { Output } from './io';
+import { styling } from './styling';
+import PropsPanel from './props-panel';
 
 export class Linkflow {
   panel: PropsPanel = new PropsPanel(this.updateProps);
